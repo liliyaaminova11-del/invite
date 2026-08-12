@@ -59,19 +59,20 @@
     pointer-events: none;
   }
 
-  .hero .kicker {
-    font-size: clamp(14px, 2.4vw, 20px);
-    letter-spacing: 8px;
-    text-transform: uppercase;
-    color: var(--brown);
-    font-weight: 500;
-  }
   .hero .title {
     margin-top: 14px;
-    font-size: clamp(34px, 7vw, 64px);
-    line-height: 1.12;
-    font-weight: 600;
+    font-size: clamp(32px, 6.6vw, 58px);
+    line-height: 1.18;
+    font-weight: 400;
+    font-style: italic;
     color: var(--ink);
+  }
+  .hero .title span { display: block; }
+  .hero .title .small {
+    font-size: 0.4em;
+    letter-spacing: 6px;
+    color: var(--brown);
+    line-height: 1.5;
   }
   .hero .names {
     font-weight: 600;
@@ -232,8 +233,11 @@
   <div class="frame"></div>
 
 
-  <p class="kicker reveal">Приглашение</p>
-  <h1 class="title reveal d1">на Никах-туй</h1>
+  <h1 class="title reveal d1">
+    <span>ПРИГЛАШЕНИЕ</span>
+    <span class="small">НА</span>
+    <span>НИКАХ-ТУЙ</span>
+  </h1>
   <div class="divider">
     <span class="line"></span>
     <svg class="diamond" viewBox="0 0 20 20"><path d="M10 2 L18 10 L10 18 L2 10 Z" fill="none" stroke="#d9be92" stroke-width="1.4"/></svg>
