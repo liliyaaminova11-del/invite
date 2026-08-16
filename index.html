@@ -225,9 +225,150 @@
     .cards { grid-template-columns: 1fr; max-width: 420px; }
     .hero { padding: 50px 16px 90px; }
   }
+
+  .envelope-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    cursor: pointer;
+    transition: opacity 1s ease, visibility 1s ease;
+  }
+  .envelope-overlay.hidden { opacity: 0; visibility: hidden; }
+  .envelope-overlay .hint {
+    position: absolute;
+    bottom: 26px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--brown);
+    animation: hintPulse 2.2s ease-in-out infinite;
+  }
+  @keyframes hintPulse {
+    0%, 100% { opacity: .45; }
+    50% { opacity: 1; }
+  }
+  .envelope {
+    position: relative;
+    width: min(360px, 86vw);
+    height: min(248px, 60vw);
+    perspective: 900px;
+  }
+  .envelope-body {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, #e3cfa9, #cbaa7c);
+    border: 1.5px solid var(--gold);
+    border-radius: 10px;
+    box-shadow: 0 18px 44px rgba(79, 58, 34, 0.28);
+  }
+  .envelope-body::before,
+  .envelope-body::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, transparent 40%, rgba(176, 138, 92, 0.25) 40%, rgba(176, 138, 92, 0.25) 60%, transparent 60%);
+  }
+  .envelope-body::after { transform: rotate(90deg); }
+  .envelope-flap {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 50%;
+    background: linear-gradient(180deg, #e9d8b6, #d3b384);
+    border: 1.5px solid var(--gold);
+    border-bottom: none;
+    border-radius: 10px 10px 0 0;
+    transform-origin: top center;
+    transition: transform .8s cubic-bezier(.6, .1, .2, 1);
+    z-index: 3;
+  }
+  .envelope-seal {
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    width: 58px;
+    height: 58px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #d6a04e, #a5762f);
+    border: 2px solid #8a6424;
+    box-shadow: 0 3px 8px rgba(79, 58, 34, 0.35);
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform .4s ease;
+  }
+  .envelope-seal::after {
+    content: "И&Л";
+    font-size: 15px;
+    letter-spacing: 1px;
+    color: #fff7e6;
+    font-style: italic;
+  }
+  .envelope-card {
+    position: absolute;
+    left: 6%; right: 6%;
+    top: 8%; bottom: 8%;
+    background: var(--paper);
+    border: 1px solid var(--lightgold);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 8px;
+    padding: 18px;
+    z-index: 1;
+    transform: translateY(0);
+    transition: transform 1s cubic-bezier(.2, .7, .25, 1);
+  }
+  .envelope-card .c-title {
+    font-size: 17px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--brown);
+  }
+  .envelope-card .c-names {
+    font-size: 26px;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+  .envelope-card .c-date {
+    font-size: 15px;
+    color: var(--gold);
+    letter-spacing: 2px;
+  }
+  .envelope.open .envelope-flap {
+    transform: rotateX(180deg);
+    border-radius: 0 0 10px 10px;
+  }
+  .envelope.open .envelope-seal { transform: translate(-50%, -50%) scale(0); }
+  .envelope.open .envelope-card { transform: translateY(-58%); z-index: 5; }
 </style>
 </head>
 <body class="texture">
+
+<div id="envelope-overlay" class="envelope-overlay">
+  <div class="envelope" id="envelope">
+    <div class="envelope-card">
+      <span class="c-title">Никах-туй</span>
+      <span class="c-names">Инсаф &amp; Лилия</span>
+      <span class="c-date">19 сентября 2026</span>
+    </div>
+    <div class="envelope-body"></div>
+    <div class="envelope-flap"></div>
+    <div class="envelope-seal"></div>
+  </div>
+  <span class="hint">нажмите, чтобы открыть</span>
+</div>
 
 <header class="hero texture">
   <div class="frame"></div>
@@ -315,6 +456,15 @@
 </footer>
 
 <script>
+  const overlay = document.getElementById('envelope-overlay');
+  const envelope = document.getElementById('envelope');
+  overlay.addEventListener('click', () => {
+    if (envelope.classList.contains('open')) return;
+    envelope.classList.add('open');
+    setTimeout(() => overlay.classList.add('hidden'), 900);
+    setTimeout(() => overlay.remove(), 2000);
+  });
+
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
   }, { threshold: 0.15 });
